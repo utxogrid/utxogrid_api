@@ -1,0 +1,57 @@
+type UtxoGrid = 
+ service {
+   /// Add a new admin. Only existing admins can call this.
+   add_admin: (record {"principal": principal;}) -> (Result_4);
+   /// Record a new miner data snapshot at the current time. Admin only.
+   add_miner_data: (record {data: MinerData;}) -> (Result_3);
+   /// Get the most recent miner data point, or null if none recorded yet.
+   get_last_miner_data: () -> (Result_2) query;
+   /// Total number of data points stored.
+   get_miner_data_count: () -> (Result_1) query;
+   /// Get the N most recent data points (descending → reversed to ascending for charting).
+   get_miner_history_count: (record {count: nat;}) -> (Result) query;
+   /// Get data points within a time range [startTime, endTime] (inclusive).
+   /// Both values are nanosecond timestamps. Pass 0 for startTime and
+   /// a far-future value for endTime to get everything.
+   get_miner_history_range: (record {
+                               endTime: nat64;
+                               startTime: nat64;
+                             }) -> (Result) query;
+ };
+type Result_4 = 
+ variant {
+   err: text;
+   ok;
+ };
+type Result_3 = 
+ variant {
+   err: text;
+   ok: nat64;
+ };
+type Result_2 = 
+ variant {
+   err: text;
+   ok: MinerDataPoint;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: nat;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: vec MinerDataPoint;
+ };
+type MinerDataPoint = 
+ record {
+   data: MinerData;
+   timestamp: nat64;
+ };
+type MinerData = 
+ record {
+   bestDifficulty: text;
+   currentTH: text;
+   totalMiners: nat;
+ };
+service : () -> UtxoGrid

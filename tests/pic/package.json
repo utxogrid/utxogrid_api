@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.3.3",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@dfinity/agent": "^3.4.3",
+    "@dfinity/candid": "^3.4.3",
+    "@dfinity/pic": "^0.18.0",
+    "@dfinity/principal": "^3.4.3",
+    "ts-node": "^10.9.2"
+  }
+}

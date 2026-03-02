@@ -1,14 +1,27 @@
 {
   "canisters": {
-    "utxogrid_api_backend": {
-      "main": "src/utxogrid_api_backend/main.mo",
-      "type": "motoko"
+    "utxogrid_api": {
+      "main": "src/main.mo",
+      "type": "motoko",
+      "pullable": {
+        "dependencies": [],
+        "wasm_url": "",
+        "init_guide": "dfx deps pull"
+      },
+      "gzip": true,
+      "declarations": {
+        "node_compatibility": true,
+        "output": "src/declarations"
+      },
+      "post_install": [
+        "cp .dfx/local/canisters/utxogrid_api/utxogrid_api.wasm.gz src/wasm"
+      ]
     }
   },
   "defaults": {
     "build": {
       "args": "",
-      "packtool": ""
+      "packtool": "mops sources"
     }
   },
   "output_env_file": ".env",
