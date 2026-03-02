@@ -1,0 +1,16 @@
+{
+  "canisters": {
+    "utxogrid_api_backend": {
+      "main": "src/utxogrid_api_backend/main.mo",
+      "type": "motoko"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
