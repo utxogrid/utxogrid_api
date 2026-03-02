@@ -5,7 +5,7 @@
       "type": "motoko",
       "pullable": {
         "dependencies": [],
-        "wasm_url": "",
+        "wasm_url": "https://github.com/utxogrid/utxogrid_api/raw/refs/heads/main/src/wasm/utxogrid_api.wasm.gz",
         "init_guide": "dfx deps pull"
       },
       "gzip": true,
