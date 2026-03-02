@@ -32,7 +32,7 @@ shared ({ caller = owner }) persistent actor class UtxoGrid() = this {
 
     // ── State ──────────────────────────────────────────────────────────────
 
-    /// Time-series map: timestamp (Int, nanoseconds) → MinerData.
+    /// Time-series map: timestamp (Nat64, nanoseconds) → MinerData.
     /// Entries are kept in ascending chronological order by the B-tree.
     let minerTimeSeries = Map.empty<Nat64, MinerData>();
 
@@ -51,7 +51,7 @@ shared ({ caller = owner }) persistent actor class UtxoGrid() = this {
 
     /// Record a new miner data snapshot at the current time. Admin only.
     public shared ({ caller }) func add_miner_data({ data : MinerData }) : async Result<Nat64, Text> {
-        if (Option.isNull(Array.indexOf(admins, Principal.equal, caller))) return #err("Only admins can add new admins");
+        if (Option.isNull(Array.indexOf(admins, Principal.equal, caller))) return #err("Only admins can add miner data");
         let now = Nat64.fromNat(Int.abs(Time.now()));
         Map.add(minerTimeSeries, Nat64.compare, now, data);
         #ok(now) // return the timestamp used
