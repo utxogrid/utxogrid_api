@@ -2,21 +2,21 @@ type UtxoGrid =
  service {
    /// Add a new admin. Only existing admins can call this.
    add_admin: (record {"principal": principal;}) -> (Result_4);
-   /// Record a new miner data snapshot at the current time. Admin only.
-   add_miner_data: (record {data: MinerData;}) -> (Result_3);
-   /// Get the most recent miner data point, or null if none recorded yet.
-   get_last_miner_data: () -> (Result_2) query;
+   /// Record a new data snapshot at the current time. Admin only.
+   add_data: (record {data: MiningData;}) -> (Result_3);
    /// Total number of data points stored.
-   get_miner_data_count: () -> (Result_1) query;
+   get_data_count: () -> (Result_2) query;
    /// Get the N most recent data points (descending → reversed to ascending for charting).
-   get_miner_history_count: (record {count: nat;}) -> (Result) query;
+   get_history_count: (record {count: nat;}) -> (Result_1) query;
    /// Get data points within a time range [startTime, endTime] (inclusive).
    /// Both values are nanosecond timestamps. Pass 0 for startTime and
    /// a far-future value for endTime to get everything.
-   get_miner_history_range: (record {
-                               endTime: nat64;
-                               startTime: nat64;
-                             }) -> (Result) query;
+   get_history_range: (record {
+                         endTime: nat64;
+                         startTime: nat64;
+                       }) -> (Result_1) query;
+   /// Get the most recent miner data point, or null if none recorded yet.
+   get_last_data: () -> (Result) query;
  };
 type Result_4 = 
  variant {
@@ -31,27 +31,79 @@ type Result_3 =
 type Result_2 = 
  variant {
    err: text;
-   ok: MinerDataPoint;
+   ok: nat;
  };
 type Result_1 = 
  variant {
    err: text;
-   ok: nat;
+   ok: vec DataPoint;
  };
 type Result = 
  variant {
    err: text;
-   ok: vec MinerDataPoint;
+   ok: DataPoint;
  };
-type MinerDataPoint = 
+type PoolData = 
  record {
-   data: MinerData;
-   timestamp: nat64;
+   blockHeight: nat64;
+   blocksFound: vec Block;
+   totalHashrate: nat64;
+   totalMiners: nat64;
+ };
+type NetworkData = 
+ record {
+   bits: text;
+   chain: text;
+   currentTx: nat64;
+   currentWeight: nat64;
+   difficulty: nat64;
+   networkHashrate: nat64;
+   next: record {
+           bits: text;
+           difficulty: nat64;
+           height: nat64;
+           target: text;
+         };
+   pooledTx: nat64;
+   target: text;
+ };
+type MiningData = 
+ record {
+   miner: MinerData;
+   network: NetworkData;
+   pool: PoolData;
  };
 type MinerData = 
  record {
-   bestDifficulty: text;
-   currentTH: text;
-   totalMiners: nat;
+   highScores:
+    vec
+     record {
+       bestDifficulty: nat64;
+       bestDifficultyUserAgent: text;
+       updatedAt: text;
+     };
+   uptime: text;
+   userAgents:
+    vec
+     record {
+       bestDifficulty: nat64;
+       count: nat64;
+       totalHashrate: nat64;
+       userAgent: text;
+     };
+ };
+type DataPoint = 
+ record {
+   data: MiningData;
+   timestamp: nat64;
+ };
+type Block = 
+ record {
+   blockData: text;
+   height: nat64;
+   id: nat64;
+   minerAddress: text;
+   sessionId: text;
+   worker: text;
  };
 service : () -> UtxoGrid
